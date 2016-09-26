@@ -82,6 +82,5 @@ def get_password_strength(password):
 if __name__ == '__main__':
     if not os.path.exists('10_million_password_list_top_1000000.txt'):
         os.system('wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/10_million_password_list_top_1000000.txt')
-    print('Введите пароль: ')
-    password = input()
+    password = input('Введите пароль: ')
     print(get_password_strength(password))
