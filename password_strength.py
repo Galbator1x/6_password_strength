@@ -69,5 +69,8 @@ if __name__ == '__main__':
     path_to_blacklist = '10_million_password_list_top_1000000.txt'
     if not os.path.exists(path_to_blacklist):
         os.system('wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/10_million_password_list_top_1000000.txt')
-    password = input('Enter the password: ')
-    print(get_password_strength(password, path_to_blacklist))
+    while True:
+        password = input('Enter the password: ')
+        if not password:
+            break
+        print('Password strength: {}'.format(str(get_password_strength(password, path_to_blacklist))))
