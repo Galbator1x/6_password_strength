@@ -3,23 +3,19 @@ import os
 
 
 def check_pass_is_date_or_digits(password):
-    password = ''.join(ch for ch in password if ch not in string.punctuation)
-    password = ''.join(ch for ch in password if ch not in string.digits)
-    return not password
+    return not set(password).difference(set(string.digits), set(string.punctuation))
 
 
 def check_pass_is_letters(password):
-    password = ''.join(ch for ch in password if ch not in string.ascii_letters)
-    return not password
+    return not set(password).difference(set(string.ascii_letters))
 
 
 def check_pass_is_punctuation(password):
-    password = ''.join(ch for ch in password if ch not in string.punctuation)
-    return not password
+    return not set(password).difference(set(string.punctuation))
 
 
-def check_pass_in_blacklist(password):
-    with open('10_million_password_list_top_1000000.txt') as blacklist:
+def check_pass_in_blacklist(password, path_to_blacklist):
+    with open(path_to_blacklist) as blacklist:
         for passw in blacklist:
             if password == passw.rstrip():
                 return True
@@ -27,30 +23,20 @@ def check_pass_in_blacklist(password):
 
 
 def check_pass_contains_lower_and_upper_case(password):
-    lower_case, upper_case = False, False
-    for ch in password:
-        if ch.isupper():
-            upper_case = True
-        if ch.islower():
-            lower_case = True
-    return lower_case and upper_case
+    lowercase_letters = set(string.ascii_lowercase)
+    uppercase_letters = set(string.ascii_uppercase)
+    return bool(set(password).intersection(lowercase_letters)) and bool(set(password).intersection(uppercase_letters))
 
 
 def check_pass_contains_punctuation(password):
-    for ch in password:
-        if ch in string.punctuation:
-            return True
-    return False
+    return bool(set(password).intersection(string.punctuation))
 
 
 def check_pass_contains_digits(password):
-    for ch in password:
-        if ch in string.digits:
-            return True
-    return False
+    return bool(set(password).intersection(string.digits))
 
 
-def get_password_strength(password):
+def get_password_strength(password, path_to_blacklist):
     strength = 1
     if check_pass_is_date_or_digits(password):
         return strength
@@ -58,7 +44,7 @@ def get_password_strength(password):
         return strength
     if check_pass_is_punctuation(password):
         return strength
-    if check_pass_in_blacklist(password):
+    if check_pass_in_blacklist(password, path_to_blacklist):
         return strength
     if len(password) < 8:
         return strength
@@ -80,7 +66,8 @@ def get_password_strength(password):
 
 
 if __name__ == '__main__':
-    if not os.path.exists('10_million_password_list_top_1000000.txt'):
+    path_to_blacklist = '10_million_password_list_top_1000000.txt'
+    if not os.path.exists(path_to_blacklist):
         os.system('wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/10_million_password_list_top_1000000.txt')
-    password = input('Введите пароль: ')
-    print(get_password_strength(password))
+    password = input('Enter the password: ')
+    print(get_password_strength(password, path_to_blacklist))
