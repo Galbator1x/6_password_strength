@@ -15,7 +15,7 @@ Password strength: 8
 ```
 Press enter to exit.
 
-Reruirements
+Requirements
 ------------
 
 - Python >= 3.4
